@@ -12,7 +12,7 @@ contract('Tutoring', ([owner, investor]) => {
   before(async () => {
     // Load Contracts
     tutoring = await Tutoring.new()
-    await tutoring.createProblem(1, "TestTitle", "TestDescription", "TestDescriptionHash")
+    await tutoring.createProblem(1, "TestDescription", "TestDescriptionHash")
   })
 
   describe('Create problem', async () => {
@@ -25,7 +25,6 @@ contract('Tutoring', ([owner, investor]) => {
     it('problem created', async () => {
       assert.equal(problemCount, 1)
       assert.equal(problem.category, 1)
-      assert.equal(problem.title, "TestTitle")
       assert.equal(problem.description, "TestDescription")
       assert.equal(problem.descriptionHash, "TestDescriptionHash")
       assert.equal(problem.solution, "")
@@ -48,16 +47,16 @@ contract('Tutoring', ([owner, investor]) => {
     })
   })
 
-  // describe('Assign problem from not Open state', async () => {
-  //   let problem;
-  //   before(async () => {
-  //     await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
-  //     problem = await tutoring.problemList(0)
-  //   })
+  describe('Assign problem from not Open state', async () => {
+    let problem;
+    before(async () => {
+      await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
+      problem = await tutoring.problemList(0)
+    })
 
-  //   it('problem assigned', async () => {
-  //     assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
-  //     assert.equal(problem.state, 1)
-  //   })
-  // })
+    it('problem assigned', async () => {
+      assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
+      assert.equal(problem.state, 1)
+    })
+  })
 })

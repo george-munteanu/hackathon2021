@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # Abis json
-/src/abis/*
+/src/abis/*.json

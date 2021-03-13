@@ -13,8 +13,7 @@ contract Tutoring {
 
     struct Problem {
         uint key;
-        string category;
-        string title;
+        Category category;
         string description;
         string descriptionHash;
         string solution;
@@ -30,11 +29,10 @@ contract Tutoring {
         owner = msg.sender;
     }
 
-    function createProblem(Category memory _category, string memory _title, string memory _description, string memory _descriptionHash) public {
+    function createProblem(Category _category, string memory _description, string memory _descriptionHash) public {
         problemList[problemCount] = Problem(
             problemCount,
-            category,
-            _title,
+            _category,
             _description,
             _descriptionHash,
             "",
@@ -58,11 +56,11 @@ contract Tutoring {
         problem.state = ProblemState.InProgress;
     }
 
-    function resolveProblem(uint key, string _solution, string _solutionHash) public {
+    function resolveProblem(uint key, string memory _solution, string memory _solutionHash) public {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.InProgress, "Problem must be in In progress state to assign");
-        require(_solution == "", "Solution must not be empty!");
+        require(keccak256(bytes(_solution)) == keccak256(bytes("")), "Solution must not be empty!");
 
         problem.solution = _solution;
         problem.solutionHash = _solutionHash;
@@ -79,12 +77,12 @@ contract Tutoring {
         problem.state = ProblemState.Resolved;
     }
 
-    function rejectSolution(uint key, string _rejectionReason) public {
+    function rejectSolution(uint key, string memory _rejectionReason) public {
         Problem storage problem = problemList[key];
 
         require(problem.state != ProblemState.PendingValidation, "Problem must be in pending validation to reject");
         require(problem.createdBy == msg.sender, "Permission Denied!");
-        require(_rejectionReason != "", "Rejection reason must not be empty");
+        require(keccak256(bytes(_rejectionReason)) != keccak256(bytes("")), "Rejection reason must not be empty");
 
         problem.rejectionReason = _rejectionReason;
         problem.state = ProblemState.InProgress;
