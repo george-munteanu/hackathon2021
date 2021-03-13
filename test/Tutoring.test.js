@@ -58,5 +58,37 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
       assert.equal(problem.state, 1)
     })
+  })
+
+  describe('Resolve problem: empty solution, In Progress state', async () => {
+    let problem;
+    before(async () => {
+      await tutoring.resolveProblem(0, "", "Solution_Image").should.be.rejected
+      problem = await tutoring.problemList(0)
     })
   })
+
+  describe('Resolve problem: good solution, In Progress state', async () => {
+    let problem;
+    before(async () => {
+      await tutoring.resolveProblem(0, "Solution", "Solution_Image")
+      problem = await tutoring.problemList(0)
+    })
+
+    it('problem resolved', async () => {
+      assert.equal(problem.solution, "Solution")
+      assert.equal(problem.solutionHash, "Solution_Image")
+      assert.equal(problem.state, 2)
+      assert.equal(problem.rejectionStatus, "")
+    })
+  })
+
+  describe('Resolve problem: good solution, not In Progress state', async () => {
+    let problem;
+    before(async () => {
+      await tutoring.resolveProblem(0, "Solution", "Solution_Image").should.be.rejected
+      problem = await tutoring.problemList(0)
+    })
+  })
+
+})

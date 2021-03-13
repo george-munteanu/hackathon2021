@@ -46,7 +46,7 @@ contract Tutoring {
         problemCount ++;
     }
 
-    function assignProblem(uint key, address _to ) public {
+    function assignProblem(uint key, address _to) public {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.Open, "Problem must be in Open state to assign");
