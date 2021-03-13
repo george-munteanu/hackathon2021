@@ -24,11 +24,11 @@ contract('Tutoring', ([owner, investor]) => {
 
     it('problem created', async () => {
       assert.equal(problemCount, 1)
-      assert.equal(problem.id(), "1")
-      assert.equal(problem.title(), "TestTitle")
-      assert.equal(problem.description(), "TestDescription")
-      assert.equal(problem.solution(), "")
-      assert.equal(problem.state(), "Open")
+      assert.equal(problem.id, "1")
+      assert.equal(problem.title, "TestTitle")
+      assert.equal(problem.description, "TestDescription")
+      assert.equal(problem.solution, "")
+      assert.equal(problem.state, "Open")
     })
   })
 })
