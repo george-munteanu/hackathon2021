@@ -13,6 +13,7 @@ contract('Tutoring', ([owner, investor]) => {
     // Load Contracts
     tutoring = await Tutoring.new()
     await tutoring.createProblem(1, "TestDescription", "TestDescriptionHash")
+    
   })
 
   describe('Create problem', async () => {
@@ -58,5 +59,22 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
       assert.equal(problem.state, 1)
     })
+
+
+    describe('Assign problem to the owner itself', async () => {
+      let problem, createdBy;
+      before(async () => {
+        await tutoring.createProblem(1, "TestDescription2", "TestDescriptionHash2")
+        createdBy = await tutoring.problemList(1).createdBy
+        await tutoring.assignProblem(1, createdBy).should.be.rejected
+        problem = await tutoring.problemList(1)
+      })
+  
+      it('problem assigned', async () => {
+        assert.equal(problem.assignedTo, 0x0000000000000000000000000000000000000000)
+        assert.equal(problem.state, 0)
+      })
+    
     })
   })
+})
