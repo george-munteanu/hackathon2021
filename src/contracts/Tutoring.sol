@@ -60,7 +60,7 @@ contract Tutoring {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.InProgress, "Problem must be in In progress state to assign");
-        require(keccak256(bytes(_solution)) == keccak256(bytes("")), "Solution must not be empty!");
+        require(keccak256(bytes(_solution)) != keccak256(bytes("")), "Solution must not be empty!");
 
         problem.solution = _solution;
         problem.solutionHash = _solutionHash;

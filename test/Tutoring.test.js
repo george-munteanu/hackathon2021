@@ -92,10 +92,11 @@ contract('Tutoring', ([owner, investor]) => {
     })
 
     it('problem resolved', async () => {
+      console.log(problem)
       assert.equal(problem.solution, "Solution")
       assert.equal(problem.solutionHash, "Solution_Image")
       assert.equal(problem.state, 2)
-      assert.equal(problem.rejectionStatus, "")
+      assert.equal(problem.rejectionReason, "")
     })
   })
 
