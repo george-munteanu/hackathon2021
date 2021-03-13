@@ -1,1 +1,50 @@
 /* Styles go here */
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.btn {
+    font-family: arial;
+    text-transform: uppercase;
+    font-size: 20px;
+    width: 200;
+    height: 75px;
+    border-radius: 80px;
+    line-height: 60px;
+    text-align: center;
+    border: 3px solid #009688;
+    /*display: block; */
+    text-decoration: none;
+    margin: 30px auto;
+    color: #009688;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    transition: .3s;
+}
+
+.btn::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #009688;
+    top: -100%;
+    left: 0;
+    z-index: -1;
+    transition: .3s;
+}
+
+.btn::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #009688;
+    top: -100%;
+    left: 0;
+    z-index: -1;
+    transition: .3s;
+}
+
