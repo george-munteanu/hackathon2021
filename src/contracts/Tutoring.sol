@@ -46,13 +46,13 @@ contract Tutoring {
         problemCount ++;
     }
 
-    function assignProblem(uint key, address _to) public {
+    function assignProblem(uint key) public {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.Open, "Problem must be in Open state to assign");
-        require(problem.createdBy != _to, "You cannot solve your own issues! Let someone else!");
+        require(problem.createdBy != msg.sender, "You cannot solve your own issues! Let someone else!");
 
-        problem.assignedTo = _to;
+        problem.assignedTo = msg.sender;
         problem.state = ProblemState.InProgress;
     }
 
@@ -60,7 +60,7 @@ contract Tutoring {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.InProgress, "Problem must be in In progress state to assign");
-        require(keccak256(bytes(_solution)) != keccak256(bytes("")), "Solution must not be empty!");
+        require((bytes(_solution)).length > 0, "Solution must not be empty!");
 
         problem.solution = _solution;
         problem.solutionHash = _solutionHash;
@@ -71,7 +71,7 @@ contract Tutoring {
     function approveSolution(uint key) public {
         Problem storage problem = problemList[key];
 
-        require(problem.state != ProblemState.PendingValidation, "Problem must be in pending validation to reject");
+        require(problem.state == ProblemState.PendingValidation, "Problem must be in pending validation to reject");
         require(problem.createdBy == msg.sender, "Permission Denied!");
 
         problem.state = ProblemState.Resolved;
@@ -80,11 +80,12 @@ contract Tutoring {
     function rejectSolution(uint key, string memory _rejectionReason) public {
         Problem storage problem = problemList[key];
 
-        require(problem.state != ProblemState.PendingValidation, "Problem must be in pending validation to reject");
+        require(problem.state == ProblemState.PendingValidation, "Problem must be in pending validation to reject");
         require(problem.createdBy == msg.sender, "Permission Denied!");
-        require(keccak256(bytes(_rejectionReason)) != keccak256(bytes("")), "Rejection reason must not be empty");
+        require((bytes(_rejectionReason)).length > 0, "Rejection reason must not be empty");
 
         problem.rejectionReason = _rejectionReason;
-        problem.state = ProblemState.InProgress;
+        problem.state = ProblemState.Open;
+        problem.assignedTo = address(0x00);
     }
 }
