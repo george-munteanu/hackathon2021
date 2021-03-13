@@ -22,9 +22,16 @@ contract Tutoring {
         owner = msg.sender;
     }
 
-    function createProblem() public {
+    function createProblem(string memory _id, string memory _title, string memory _description) public {
         problemCount ++;
 
-        problemList[problemCount] = Problem({id:"1", title:"test", description:"tests", solution:"", poster:0xc2b0f50c3557C0Ff1E3Aec9172F4A22DB54c5640, state:ProblemState.Open});
+        problemList[problemCount] = Problem(
+            _id,
+            _title,
+            _description,
+            "",
+            msg.sender,
+            ProblemState.Open
+        );
     }
 }
