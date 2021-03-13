@@ -12,21 +12,22 @@ contract('Tutoring', ([owner, investor]) => {
   before(async () => {
     // Load Contracts
     tutoring = await Tutoring.new()
+    await tutoring.createProblem(1, "TestTitle", "TestDescription", "TestDescriptionHash")
   })
 
   describe('Create problem', async () => {
     let problemCount, problem;
     before(async () => {
-      await tutoring.createProblem("1", "TestTitle", "TestDescription")
       problemCount = await tutoring.problemCount()
       problem = await tutoring.problemList(0)
     })
 
     it('problem created', async () => {
       assert.equal(problemCount, 1)
-      assert.equal(problem.id, "1")
+      assert.equal(problem.category, 1)
       assert.equal(problem.title, "TestTitle")
       assert.equal(problem.description, "TestDescription")
+      assert.equal(problem.descriptionHash, "TestDescriptionHash")
       assert.equal(problem.solution, "")
       assert.equal(problem.assignedTo, "0x0000000000000000000000000000000000000000")
       assert.equal(problem.state, 0)
@@ -34,10 +35,9 @@ contract('Tutoring', ([owner, investor]) => {
     })
   })
 
-  describe('Assign problem', async () => {
-    let problemCount, problem;
+  describe('Assign problem from Open state', async () => {
+    let problem;
     before(async () => {
-      await tutoring.createProblem("1", "TestTitle", "TestDescription")
       await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
       problem = await tutoring.problemList(0)
     })
@@ -47,4 +47,17 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.state, 1)
     })
   })
+
+  // describe('Assign problem from not Open state', async () => {
+  //   let problem;
+  //   before(async () => {
+  //     await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
+  //     problem = await tutoring.problemList(0)
+  //   })
+
+  //   it('problem assigned', async () => {
+  //     assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
+  //     assert.equal(problem.state, 1)
+  //   })
+  // })
 })
