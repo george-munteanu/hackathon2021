@@ -28,7 +28,8 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.title, "TestTitle")
       assert.equal(problem.description, "TestDescription")
       assert.equal(problem.solution, "")
-      assert.equal(problem.state, "Open")
+      assert.equal(problem.state, 0)
+
     })
   })
 })
