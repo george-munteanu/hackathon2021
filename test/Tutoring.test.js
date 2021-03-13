@@ -28,7 +28,7 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.title, "TestTitle")
       assert.equal(problem.description, "TestDescription")
       assert.equal(problem.solution, "")
-      assert.equal(problem.assignedTo, "0x00")
+      assert.equal(problem.assignedTo, "0x0000000000000000000000000000000000000000")
       assert.equal(problem.state, 0)
 
     })
@@ -38,9 +38,8 @@ contract('Tutoring', ([owner, investor]) => {
     let problemCount, problem;
     before(async () => {
       await tutoring.createProblem("1", "TestTitle", "TestDescription")
-      problemCount = await tutoring.problemCount()
-      problem = await tutoring.problemList(0)
       await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
+      problem = await tutoring.problemList(0)
     })
 
     it('problem assigned', async () => {
