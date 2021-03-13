@@ -19,12 +19,16 @@ contract('Tutoring', ([owner, investor]) => {
     before(async () => {
       await tutoring.createProblem("1", "TestTitle", "TestDescription")
       problemCount = await tutoring.problemCount()
-      problem = await tutoring.problemList(0)
+      problem = await tutoring.problemList(1)
     })
 
     it('problem created', async () => {
       assert.equal(problemCount, 1)
       assert.equal(problem.id(), "1")
+      assert.equal(problem.title(), "TestTitle")
+      assert.equal(problem.description(), "TestDescription")
+      assert.equal(problem.solution(), "")
+      assert.equal(problem.state(), "Open")
     })
   })
 })
