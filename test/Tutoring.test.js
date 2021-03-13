@@ -50,7 +50,7 @@ contract('Tutoring', ([owner, investor]) => {
   describe('Assign problem from not Open state', async () => {
     let problem;
     before(async () => {
-      await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100")
+      await tutoring.assignProblem(0, "0x1100110011001100110011001100110011001100").should.be.rejected
       problem = await tutoring.problemList(0)
     })
 
@@ -58,5 +58,5 @@ contract('Tutoring', ([owner, investor]) => {
       assert.equal(problem.assignedTo, 0x1100110011001100110011001100110011001100)
       assert.equal(problem.state, 1)
     })
+    })
   })
-})
