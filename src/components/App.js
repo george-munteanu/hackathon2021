@@ -10,6 +10,12 @@ class App extends Component {
     await this.loadBlockchainData()
   }
 
+  createProblem()  {
+    this.state.tutoring.methods.createProblem("1", "title","description").send({ from: this.state.account }).on('transactionHash', (hash) => {
+      
+    })
+  }
+
   async loadBlockchainData() {
     const web3 = window.web3
 
@@ -23,6 +29,9 @@ class App extends Component {
     if(tutoringData) {
       const tutoring = new web3.eth.Contract(Tutoring.abi, tutoringData.address)
       this.setState({ tutoring })
+      let problemList = await tutoring.methods.problemList().call()
+      this.setState({ problemList })
+      console.log(problemList)
     } else {
       window.alert('Tutoring contract not deployed to detected network.')
     }
@@ -47,16 +56,35 @@ class App extends Component {
     super(props)
     this.state = {
       account: '0x0',
-      tutoring: {}
+      tutoring: {},
+      problemList: {}
     }
   }
 
   render() {
 
     return (
-      <div>
+      <div id="content" className="mt-3">
         {this.state.account}
+
+        <div className="card mb-4">
+          <div className="card-body">
+            <p>Problem List</p>
+          </div>
+        </div>
+
+        <button
+              type="submit"
+              className="btn btn-link btn-block btn-sm"
+              onClick={(event) => {
+                event.preventDefault()
+                this.createProblem()
+              }}>
+                Add Problem
+              </button>
+        
       </div>
+      
     );
   }
 }
