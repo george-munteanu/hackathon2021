@@ -12,10 +12,15 @@ contract('Tutoring', ([owner, investor]) => {
     tutoring = await Tutoring.new()
   })
 
-  describe('Mock problem', async () => {
+  describe('Create problem', async () => {
+    let problemCount;
+    before(async () => {
+      await tutoring.createProblem()
+      problemCount = await tutoring.problemCount()
+    })
+
     it('problem created', async () => {
-      const problemList = await tutoring.createProblem()
-      assert.equal(problemlist.length, 1)
+      assert.equal(problemCount, 1)
     })
   })
 })

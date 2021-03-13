@@ -4,7 +4,8 @@ contract Tutoring {
     string public name = "Tutoring";
     address public owner;
 
-    Problem[] public problemList;
+    uint public problemCount = 0;
+    mapping(uint => Problem) public problemList;
 
     enum ProblemState {Open, InProgress, Resolved}
 
@@ -22,7 +23,8 @@ contract Tutoring {
     }
 
     function createProblem() public {
-        problemList.push(
-            Problem({id:"1", title:"test", description:"tests", solution:"", poster:0xc2b0f50c3557C0Ff1E3Aec9172F4A22DB54c5640, state:ProblemState.Open}));
+        problemCount ++;
+
+        problemList[problemCount] = Problem({id:"1", title:"test", description:"tests", solution:"", poster:0xc2b0f50c3557C0Ff1E3Aec9172F4A22DB54c5640, state:ProblemState.Open});
     }
 }
