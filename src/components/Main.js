@@ -9,6 +9,40 @@ class Main extends Component {
         <div className="row">
           <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
             <div className="content mr-auto ml-auto">
+
+          <div className="form-group mr-sm-2">
+            <h2>Manage moderators</h2>
+            <div className="form-group mr-sm-2">
+                <input
+                  id="moderatorAddress"
+                  type="text"
+                  ref={(input) => { this.moderatorAddress = input }}
+                  className="form-control"
+                  placeholder="Moderator address..."
+                  required />
+            </div>
+            <button
+              className="btn btn-link btn-sm float-right pt-0"
+              disabled={this.props.account !== this.props.owner}
+              onClick={(event) => {
+                const address = this.moderatorAddress.value
+                this.props.removeModerator(address)
+              }}
+            >
+              Remove
+            </button>
+            <button
+              className="btn btn-link btn-sm float-right pt-0"
+              disabled={this.props.account !== this.props.owner}
+              onClick={(event) => {
+                const address = this.moderatorAddress.value
+                this.props.addModerator(address)
+              }}
+            >
+              Add
+            </button>
+            </div>
+            <br/><br/><br/><br/>
               <h2>Add problem</h2>
               <form onSubmit={(event) => {
                 event.preventDefault()
@@ -69,7 +103,7 @@ class Main extends Component {
                         <button
                           className="btn btn-link btn-sm float-right pt-0"
                           name={problem.key}
-                          disabled={problem.createdBy !== this.props.account || problem.state !== "2"}
+                          disabled={(problem.createdBy !== this.props.account && !this.props.moderators.includes(this.props.account)) || problem.state !== "2"}
                           onClick={(event) => {
                             const rejectionReason = this.rejectionReason.value
                             this.props.rejectSolution(problem.key, rejectionReason)
@@ -127,7 +161,7 @@ class Main extends Component {
                         </li>
                       }
                       {
-                        problem.createdBy !== this.props.account || problem.state !== "2" ? 
+                        (problem.createdBy !== this.props.account && !this.props.moderators.includes(this.props.account)) || problem.state !== "2" ? 
                         <span/> :
                         <li className="list-group-item">
                           <h2>Reject Reason</h2>

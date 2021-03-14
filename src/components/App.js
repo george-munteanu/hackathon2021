@@ -1,4 +1,5 @@
 import Tutoring from '../abis/Tutoring.json'
+import User from '../abis/User.json'
 import React, { Component } from 'react';
 import Navbar from './Navbar'
 import Main from './Main'
@@ -36,9 +37,10 @@ class App extends Component {
     this.setState({ account: accounts[0] })
     // Network ID
     const networkId = await web3.eth.net.getId()
-    const networkData = Tutoring.networks[networkId]
-    if(networkData) {
-      const tutoring = new web3.eth.Contract(Tutoring.abi, networkData.address)
+
+    const tutoringData = Tutoring.networks[networkId]
+    if(tutoringData) {
+      const tutoring = new web3.eth.Contract(Tutoring.abi, tutoringData.address)
       this.setState({ tutoring: tutoring })
       const problemCount = await tutoring.methods.problemCount().call()
       this.setState({ problemCount: problemCount })
@@ -50,10 +52,35 @@ class App extends Component {
           problems: [...this.state.problems, problem]
         })
       }
-      this.setState({ loading: false})
     } else {
       window.alert('Tutoring contract not deployed to detected network.')
     }
+
+    const userData = User.networks[networkId]
+    if(userData) {
+      const user = new web3.eth.Contract(User.abi, userData.address)
+      this.setState({ user })
+
+      const owner = await user.methods.owner().call()
+      console.log(owner)
+      this.setState({ owner: owner })
+
+      const moderatorsCount = await user.methods.userCount().call()
+      this.setState({ moderatorsCount: moderatorsCount })
+      // Load moderators
+      for (i = 0; i < moderatorsCount; i++) {
+        const moderator = await user.methods.userList(i).call()
+        console.log(moderator)
+        this.setState({
+          moderators: [...this.state.moderators, moderator]
+        })
+      }
+      this.setState({ loading: false})
+    } else {
+      window.alert('User contract not deployed to detected network.')
+    }
+
+
   }
 
   captureFile = event => {
@@ -139,12 +166,28 @@ class App extends Component {
     })
   }
 
+  addModerator(adress) {
+    this.setState({ loading: true })
+    this.state.user.methods.addUser(adress).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      this.setState({ loading: false })
+    })
+  }
+
+  removeModerator(adress) {
+    this.setState({ loading: true })
+    this.state.user.methods.removeUser(adress).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      this.setState({ loading: false })
+    })
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       account: '',
       tutoring: null,
+      user: null,
       problems: [],
+      moderators: [],
       loading: true
     }
 
@@ -154,6 +197,8 @@ class App extends Component {
     this.resolveProblem = this.resolveProblem.bind(this)
     this.approveSolution = this.approveSolution.bind(this)
     this.rejectSolution = this.rejectSolution.bind(this)
+    this.addModerator = this.addModerator.bind(this)
+    this.removeModerator = this.removeModerator.bind(this)
   }
 
   render() {
@@ -171,6 +216,10 @@ class App extends Component {
               resolveProblem={this.resolveProblem}
               approveSolution={this.approveSolution}
               rejectSolution={this.rejectSolution}
+              owner={this.state.owner}
+              addModerator={this.addModerator}
+              removeModerator={this.removeModerator}
+              moderators={this.state.moderators}
             />
         }
       </div>
