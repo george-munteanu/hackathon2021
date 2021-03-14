@@ -12,7 +12,8 @@ contract Donation {
         owner.transfer(msg.value);
     }
 
-    function getBalance() public view {
+    function getBalance() public view returns (uint) {
+        return
         address(this).balance;
     }
 }

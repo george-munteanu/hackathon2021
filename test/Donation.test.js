@@ -17,10 +17,9 @@ contract('User', ([owner, author]) => {
   describe('Donate something', async () => {
     let balance, ammount = 1000;
     it("donation success", async () => {
-      await donation.donate()
-      balance = await donation.getBalance({value: ammount})
-      
-      assert.isAtLeast(balance, ammount);
+      await donation.donate({value: web3.utils.toWei("0.1", 'ether')})
+      balance = await donation.getBalance()
+      assert.isAtLeast(balance.toString(), web3.utils.toWei("0.1", 'ether'));
     })
   })
 })
