@@ -20,7 +20,7 @@ contract('User', ([owner, author]) => {
     before(async () => {
       await user.addUser("0x0000000000000000000000000000000000000002")
       userCount = await user.userCount()
-      addedUser = user.userList(0)
+      addedUser = await user.userList(1)
     })
 
     it('user added', async () => {
