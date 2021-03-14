@@ -87,5 +87,7 @@ contract Tutoring {
         problem.rejectionReason = _rejectionReason;
         problem.state = ProblemState.Open;
         problem.assignedTo = address(0x00);
+        problem.solution = "";
+        problem.solutionHash = "";
     }
 }

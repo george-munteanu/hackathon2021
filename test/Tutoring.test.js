@@ -155,6 +155,8 @@ contract('Tutoring', ([owner, author]) => {
     it('solution rejected', async () => {
       assert.equal(problem.rejectionReason, "Bad teacher")
       assert.equal(problem.state, 0)
+      assert.equal(problem.solution, "")
+      assert.equal(problem.solutionHash, "")
     })
   })
 
