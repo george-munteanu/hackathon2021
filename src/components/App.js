@@ -69,22 +69,28 @@ class App extends Component {
     }
   }
 
-  addProblem(description) {
-    console.log("Submitting file to ipfs...")
+  addProblem(category, description) {
+    let imageHash='';
 
-    //adding file to the IPFS
-    ipfs.add(this.state.buffer, (error, result) => {
-      console.log('Ipfs result', result)
-      if(error) {
-        console.error(error)
-        return
-      }
-
+    if(this.state.buffer !== undefined) {
+      ipfs.add(this.state.buffer, (error, result) => {
+        console.log('Ipfs result', result)
+        if(error) {
+          console.error(error)
+          return
+        }
+        imageHash = result[0].hash;
+        this.setState({ loading: true })
+        this.state.tutoring.methods.createProblem(category, description, imageHash).send({ from: this.state.account }).on('transactionHash', (hash) => {
+          this.setState({ loading: false })
+        })
+      })
+    } else {
       this.setState({ loading: true })
-      this.state.tutoring.methods.createProblem(0, description, result[0].hash).send({ from: this.state.account }).on('transactionHash', (hash) => {
+      this.state.tutoring.methods.createProblem(category, description, imageHash).send({ from: this.state.account }).on('transactionHash', (hash) => {
         this.setState({ loading: false })
       })
-    })
+    }
   }
 
   assignProblem(key) {
@@ -95,22 +101,29 @@ class App extends Component {
   }
 
   resolveProblem(key, solution) {
-    // console.log("Submitting file to ipfs...")
+    console.log(this.state.buffer);
+    let imageHash='';
 
-    // //adding file to the IPFS
-    // ipfs.add(this.state.buffer, (error, result) => {
-    //   console.log('Ipfs result', result)
-    //   if(error) {
-    //     console.error(error)
-    //     return
-    //   }
-
-      this.setState({ loading: true })
-      this.state.tutoring.methods.resolveProblem(key, solution, "result[0].hash").send({ from: this.state.account }).on('transactionHash', (hash) => {
+    if(this.state.buffer !== undefined) {
+      ipfs.add(this.state.buffer, (error, result) => {
+        console.log('Ipfs result', result)
+        if(error) {
+          console.error(error)
+          return
+        }
+        imageHash = result[0].hash;
+        this.setState({ loading: true })
+        this.state.tutoring.methods.resolveProblem(key, solution, imageHash).send({ from: this.state.account }).on('transactionHash', (hash) => {
+        this.setState({ loading: false })
+        })
+      }) 
+    } else {
+        this.setState({ loading: true })
+        this.state.tutoring.methods.resolveProblem(key, solution, imageHash).send({ from: this.state.account }).on('transactionHash', (hash) => {
         this.setState({ loading: false })
       })
-    //})
-  }
+    }
+ }
 
   approveSolution(key) {
     this.setState({ loading: true })
