@@ -98,7 +98,7 @@ contract('Tutoring', ([owner, author]) => {
   })
 
   describe('Resolve problem: good solution, not In Progress state', async () => {
-    before(async () => {
+    it("text", async () => {
       await tutoring.resolveProblem(0, "Solution", "Solution_Image").should.be.rejected
     })
   })
@@ -116,22 +116,22 @@ contract('Tutoring', ([owner, author]) => {
   })
 
   describe('Approve solution: not Pending Validation state', async () => {
-    before(async () => {
+    it("text", async () => {
       await tutoring.approveSolution(0).should.be.rejected
     })
   })
 
   describe('Approve solution: not same user who created it', async () => {
-    before(async () => {
+    it("text3", async () => {
       await tutoring.createProblem(3, "TestDescription3", "TestDescriptionHash3")
       await tutoring.assignProblem(2, { from: author })
       await tutoring.resolveProblem(2, "Solution", "Solution image")
-      await tutoring.approveSolution(0, { from: author }).should.be.rejected
+      await tutoring.approveSolution(2, { from: author }).should.be.rejected
     })
   })
 
   describe('Reject solution, empty message', async () => {
-     before(async () => {
+     it("Text2", async () => {
         await tutoring.createProblem(3, "TestDescription4", "TestDescriptionHash4")
         await tutoring.assignProblem(3, { from: author })
         await tutoring.resolveProblem(3, "Solution", "Solution image")
@@ -140,7 +140,7 @@ contract('Tutoring', ([owner, author]) => {
   })
 
   describe('Reject solution, good message, same user who created', async () => {
-    before(async () => {
+    it("text", async () => {
         await tutoring.rejectSolution(3, "Message", { from: author }).should.be.rejected
     })
   })
@@ -148,16 +148,14 @@ contract('Tutoring', ([owner, author]) => {
   describe('Reject solution, message present', async () => {
     let problem;
     before(async () => {
-        await tutoring.createProblem(4, "TestDescription5", "TestDescriptionHash5")
-        await tutoring.assignProblem(3, { from: author })
-        await tutoring.resolveProblem(3, "Solution", "Solution image")
-        await tutoring.rejectSolution(3, "Bad teacher")
+        await tutoring.rejectSolution(3, "Bad teacher", {from:owner})
         problem = await tutoring.problemList(3)
     })
 
     it('solution rejected', async () => {
       assert.equal(problem.rejectionReason, "Bad teacher")
-      assert.equal(problem.state, 1)
+      assert.equal(problem.state, 0)
     })
   })
+
 })

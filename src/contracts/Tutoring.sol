@@ -60,7 +60,7 @@ contract Tutoring {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.InProgress, "Problem must be in In progress state to assign");
-        require((bytes(_solution)).length > 0, "Solution must not be empty!");
+        require((bytes(_solution)).length > bytes("").length, "Solution must not be empty!");
 
         problem.solution = _solution;
         problem.solutionHash = _solutionHash;
@@ -82,7 +82,7 @@ contract Tutoring {
 
         require(problem.state == ProblemState.PendingValidation, "Problem must be in pending validation to reject");
         require(problem.createdBy == msg.sender, "Permission Denied!");
-        require((bytes(_rejectionReason)).length > 0, "Rejection reason must not be empty");
+        require((bytes(_rejectionReason)).length > bytes("").length, "Rejection reason must not be empty");
 
         problem.rejectionReason = _rejectionReason;
         problem.state = ProblemState.Open;
