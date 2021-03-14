@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Identicon from 'identicon.js';
+import './App.css';
 
 class Navbar extends Component {
 
@@ -20,6 +21,17 @@ class Navbar extends Component {
               />
               : <span></span>
             }
+          </li>
+          <li>
+            <a className="colorLink" href="#"
+            
+            onClick={(event) => {
+                let donationAmount = window.web3.utils.toWei('5', 'Ether')
+                this.props.donate(donationAmount)
+              }}
+            >
+              Donate 5 ETH
+            </a>
           </li>
         </ul>
       </nav>

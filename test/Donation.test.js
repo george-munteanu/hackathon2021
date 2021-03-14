@@ -6,7 +6,7 @@ require('chai')
   .use(require('chai-as-promised'))
   .should()
 
-contract('User', ([owner, author]) => {
+contract('User', ([owner, donor]) => {
   let donation;
 
   before(async () => {
@@ -17,9 +17,26 @@ contract('User', ([owner, author]) => {
   describe('Donate something', async () => {
     let balance, ammount = 1000;
     it("donation success", async () => {
-      await donation.donate({value: web3.utils.toWei("0.1", 'ether')})
-      balance = await donation.getBalance()
-      assert.isAtLeast(balance.toString(), web3.utils.toWei("0.1", 'ether'));
+
+      let oldOwnerBalance
+      oldOwnerBalance = await web3.eth.getBalance(owner)
+      oldOwnerBalance = new web3.utils.BN(oldOwnerBalance)
+
+
+      await donation.donate({value: web3.utils.toWei("0.1", 'Ether'), from: donor})
+
+      let newOwnerBalance
+      newOwnerBalance = await web3.eth.getBalance(owner)
+      newOwnerBalance = new web3.utils.BN(newOwnerBalance)
+
+      let donationAmount
+      donationAmount = web3.utils.toWei('0.1', 'Ether')
+      donationAmount = new web3.utils.BN(donationAmount)
+
+      const expectedBalance = oldOwnerBalance.add(donationAmount)
+
+      assert.equal(newOwnerBalance.toString(), expectedBalance.toString())
+
     })
   })
 })

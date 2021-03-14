@@ -9,11 +9,6 @@ contract Donation {
     }
 
     function donate() public payable {
-        owner.transfer(msg.value);
-    }
-
-    function getBalance() public view returns (uint) {
-        return
-        address(this).balance;
+        address(owner).transfer(msg.value);
     }
 }

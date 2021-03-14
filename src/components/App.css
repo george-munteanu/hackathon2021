@@ -48,3 +48,6 @@ body{
     transition: .3s;
 }
 
+.colorLink {
+    color: #ffffff !important;
+}

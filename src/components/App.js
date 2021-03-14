@@ -1,5 +1,6 @@
 import Tutoring from '../abis/Tutoring.json'
 import User from '../abis/User.json'
+import Donation from '../abis/Donation.json'
 import React, { Component } from 'react';
 import Navbar from './Navbar'
 import Main from './Main'
@@ -75,11 +76,18 @@ class App extends Component {
           moderators: [...this.state.moderators, moderator]
         })
       }
-      this.setState({ loading: false})
     } else {
       window.alert('User contract not deployed to detected network.')
     }
 
+    const donationData = Donation.networks[networkId]
+    if(donationData) {
+      const donation = new web3.eth.Contract(Donation.abi, donationData.address)
+      this.setState({ donation })
+      this.setState({ loading: false})
+    } else {
+      window.alert('Donation contract not deployed to detected network.')
+    }
 
   }
 
@@ -180,12 +188,20 @@ class App extends Component {
     })
   }
 
+  donate(amount) {
+    this.setState({ loading: true })
+    this.state.donation.methods.donate().send({ from: this.state.account, value: amount }).on('transactionHash', (hash) => {
+      this.setState({ loading: false })
+    })
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       account: '',
       tutoring: null,
       user: null,
+      donation: null,
       problems: [],
       moderators: [],
       loading: true
@@ -199,12 +215,15 @@ class App extends Component {
     this.rejectSolution = this.rejectSolution.bind(this)
     this.addModerator = this.addModerator.bind(this)
     this.removeModerator = this.removeModerator.bind(this)
+    this.donate = this.donate.bind(this)
   }
 
   render() {
     return (
       <div>
-        <Navbar account={this.state.account} />
+        <Navbar account={this.state.account} 
+                donate={this.donate}
+        />
         { this.state.loading
           ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
           : <Main
