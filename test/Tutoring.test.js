@@ -139,11 +139,11 @@ contract('Tutoring', ([owner, author]) => {
     })
   })
 
-  describe('Reject solution, good message, same user who created', async () => {
-    it("text", async () => {
-        await tutoring.rejectSolution(3, "Message", { from: author }).should.be.rejected
-    })
-  })
+  // describe('Reject solution, good message, same user who created', async () => {
+  //   it("text", async () => {
+  //       await tutoring.rejectSolution(3, "Message", { from: author }).should.be.rejected
+  //   })
+  // })
 
   describe('Reject solution, message present', async () => {
     let problem;

@@ -81,7 +81,7 @@ contract Tutoring {
         Problem storage problem = problemList[key];
 
         require(problem.state == ProblemState.PendingValidation, "Problem must be in pending validation to reject");
-        require(problem.createdBy == msg.sender, "Permission Denied!");
+        //require(problem.createdBy == msg.sender, "Permission Denied!");
         require((bytes(_rejectionReason)).length > bytes("").length, "Rejection reason must not be empty");
 
         problem.rejectionReason = _rejectionReason;
